@@ -35,19 +35,22 @@ module.exports = {
         try {
             const chatroom = Math.round(Math.random() * 100000);
             const { user_id, friend_id } = request.body
-            const check = await checkRoom(user_id, friend_id)
-            if (!check.length > 0) {
-                const setData = {
-                    code_chatroom: chatroom,
-                    user_id: user_id,
-                    friend_id: friend_id,
-                    chatroom_created_at: new Date(),
-                };
-                const result = await postRoom(setData);
-                return helper.response(response, 200, "Room Created", chatroom);
-            } else {
-                return helper.response(response, 400, "Room Already Created");
-            }
+            const setData1 = {
+                code_chatroom: chatroom,
+                user_id: user_id,
+                chatroom_created_at: new Date(),
+            };
+              // console.log(setData1);
+            await postRoom(setData1);
+            const setData2 = {
+                code_chatroom: chatroom,
+                user_id: friend_id,
+                chatroom_created_at: new Date(),
+            };
+
+              // console.log(setData2);
+            await postRoom(setData2);
+            return helper.response(response, 200, "Room Created", chatroom);
 
         } catch (error) {
             return helper.response(response, 400, "Bad Request");

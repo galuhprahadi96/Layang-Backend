@@ -32,6 +32,7 @@ module.exports = {
         user_id,
         friend_id,
       };
+      console.log(setData)
       const result = await postFriendList(setData);
       return helper.response(response, 200, `success add friend`, result);
     } catch (error) {

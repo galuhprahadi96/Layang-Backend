@@ -17,27 +17,15 @@ module.exports = {
         });
     },
     postFriendList: (setData) => {
-        let checkFriend = ''
-        checkFriend = `WHERE (friendlist.user_id=${setData.user_id} OR friendlist.user_id=${setData.friend_id}) AND (friendlist.friend_id=${setData.user_id} OR friendlist.friend_id=${setData.friend_id})`
         return new Promise((resolve, reject) => {
-            connection.query(`SELECT * FROM users INNER JOIN friendlist ON users.user_id = friendlist.friend_id ${checkFriend}`, (error, result) => {
+            connection.query('INSERT INTO friendlist SET ?', setData, (error, result) => {
                 if (!error) {
-                    if (result == '') {
-                        connection.query('INSERT INTO friendlist SET ?', setData, (error, result) => {
-                            if (!error) {
-                                resolve('Add Friend success')
-                            } else {
-                                reject(new Error(error))
-                            }
-                        })
-                    } else {
-                        resolve('Already Friends')
-                    }
+                     resolve('Add Friend success')
                 } else {
-                    reject(new Error(error))
+                      reject(new Error(error))
                 }
             })
-        })
+        })             
     },
     deleteFriend: (user_id, friendListId) => {
         return new Promise((resolve, reject) => {
