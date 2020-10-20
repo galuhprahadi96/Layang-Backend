@@ -30,7 +30,14 @@ io.on("connection", (socket) => {
     io.to(data.code_chatroom).emit("chatMessage", data);
   });
 
+  socket.on("createRoom", (data) => {
+    console.log(data)
+    // socket.join(data.code_chatroom);
+    socket.broadcast.emit("room", data)
+  })
+
   socket.on("typing", (data) => {
+    console.log(data)
     socket.join(data.code_chatroom);
     socket.broadcast.emit("typingMessage", data)
   })
