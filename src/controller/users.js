@@ -129,6 +129,34 @@ module.exports = {
             return helper.response(response, 400, "Bad Request", error);
         }
     },
+    resetProfile: async (request, response) => {
+        try {
+            const id = request.params.id;
+            const checkId = await getUserId(id);
+            if (checkId.length > 0) {
+                fs.unlink(`./uploads/${checkId[0].user_image}`, async (err) => {
+                    if (err) {
+                        throw err;
+                    } else {
+                        const setData = {
+                            user_image: "profile.png",
+                        };
+                        const result = await patchUser(setData, id);
+                        return helper.response(
+                            response,
+                            201,
+                            "success reset profile image",
+                            result
+                        );
+                    }
+                });
+            } else {
+                return helper.response(response, 404, "Data user not found");
+            }
+        } catch (error) {
+            return helper.response(response, 400, "Bad Request", error);
+        }
+    },
     updateLocation: async (request, response) => {
         const id = request.params.id;
         const { lat, lng } = request.body;
