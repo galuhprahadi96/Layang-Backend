@@ -3,7 +3,7 @@ const connection = require("../config/mysql");
 module.exports = {
     getRoomById: (code_chatroom, user_id) => {
         return new Promise((resolve, reject) => {
-            connection.query('SELECT * FROM chatroom WHERE sender_id = ? AND code_chatroom = ?', [user_id, code_chatroom], (error, result) => {
+            connection.query('SELECT * FROM chatroom WHERE user_id = ? AND code_chatroom = ?', [user_id, code_chatroom], (error, result) => {
                 !error ? resolve(result) : reject(new Error(error))
             })
         })

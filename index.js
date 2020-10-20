@@ -12,6 +12,29 @@ app.use(cors());
 
 const http = require("http");
 const server = http.createServer(app);
+const io = socket(server)
+
+io.on("connection", (socket) => {
+  console.log("Socket.io Connect !")
+
+  socket.on("joinRoom", (data) => {
+    socket.join(data);
+    socket.to(data).emit("chatMessage", {
+      code_chatroom: data,
+    });
+  });
+
+  socket.on("roomMessage", (data) => {
+    // console.log(data)
+    socket.join(data.code_chatroom);
+    io.to(data.code_chatroom).emit("chatMessage", data);
+  });
+
+  socket.on("typing", (data) => {
+    socket.join(data.code_chatroom);
+    socket.broadcast.emit("typingMessage", data)
+  })
+})
 
 
 app.use(bodyParser.json());
