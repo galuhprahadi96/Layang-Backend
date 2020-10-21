@@ -1,29 +1,31 @@
 const helper = require("../helper");
-const { getRoomByUserId, getRoomByRoomId, checkRoom, postRoom } = require("../model/room");
+const { getRoomByUserId, postRoom } = require("../model/room");
+const { getLatestMessage } = require("../model/message");
+const { getUserId } = require("../model/users");
 
 module.exports = {
     getRoomByUserId: async (request, response) => {
         try {
             const user_id = request.params.id;
-            // console.log(request.params);
             const dataRoom = await getRoomByUserId(user_id);
             // console.log(dataRoom);
             if (dataRoom.length > 0) {
-                // console.log("masih belum")
-                const codeRoom = dataRoom.map((val) => {
-                    return val.code_chatroom;
-                    // console.log(e)
-                });
-                let dataRoomChat = [];
-                for (let i = 0; i < codeRoom.length; i++) {
-                    // console.log(roomId);
-                    let data = await getRoomByRoomId(codeRoom[i]);
-                    const result = data.filter(
-                        (val) => val.user_id !== parseInt(user_id)
-                    )
-                    dataRoomChat = dataRoomChat.concat(result);
+                for (let i = 0; i < dataRoom.length; i++) {
+                    let dataUser = await getUserId(dataRoom[i].receiver);
+                    // console.log(dataUser)
+                    dataRoom[i].user_name = dataUser[0].user_name
+                    dataRoom[i].user_image = dataUser[0].user_image
+
+                    let recentMsg = await getLatestMessage(dataRoom[i].code_chatroom);
+                    // console.log(recentMsg)
+                    if (recentMsg.length > 0) {
+                        dataRoom[i].recent_message = recentMsg[0].message
+                    }else{
+                        dataRoom[i].recent_message = ""
+                    }
                 }
-                return helper.response(response, 200, "Get Room Success", dataRoomChat);
+                // console.log(dataRoomChat)
+                return helper.response(response, 200, "Get Room Success", dataRoom);
             } else {
                 return helper.response(response, 400, "Please created room");
             }
@@ -37,18 +39,19 @@ module.exports = {
             const { user_id, friend_id } = request.body
             const setData1 = {
                 code_chatroom: chatroom,
-                user_id: user_id,
+                sender: user_id,
+                receiver: friend_id,
                 chatroom_created_at: new Date(),
             };
-              // console.log(setData1);
             await postRoom(setData1);
+
             const setData2 = {
                 code_chatroom: chatroom,
-                user_id: friend_id,
+                sender: friend_id,
+                receiver: user_id,
                 chatroom_created_at: new Date(),
             };
-
-              // console.log(setData2);
+              // console.log(setData);
             await postRoom(setData2);
             return helper.response(response, 200, "Room Created", chatroom);
 

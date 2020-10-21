@@ -7,9 +7,9 @@ module.exports = {
     getMessageByRoomId: async (request, response) => {
         try {
             const { code_chatroom, user_id } = request.query;
-            const result = await getRoomById(code_chatroom, user_id)
+            const result = await getRoomById(user_id, code_chatroom)
             if (result.length > 0) {
-                const getDataGetter = await getUserId(result[0].user_id)
+                const getDataGetter = await getUserId(result[0].receiver)
                 result[0].room_name = getDataGetter[0].user_name
                 result[0].room_img = getDataGetter[0].user_image
                 const getMessage = await getMessageRoomId(code_chatroom)

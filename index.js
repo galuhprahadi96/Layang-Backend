@@ -25,7 +25,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("roomMessage", (data) => {
-    // console.log(data)
+    console.log(data)
     socket.join(data.code_chatroom);
     io.to(data.code_chatroom).emit("chatMessage", data);
   });
