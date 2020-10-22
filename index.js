@@ -19,9 +19,7 @@ io.on("connection", (socket) => {
 
   socket.on("joinRoom", (data) => {
     socket.join(data);
-    socket.to(data).emit("chatMessage", {
-      code_chatroom: data,
-    });
+    socket.to(data).emit("chatMessage");
   });
 
   socket.on("roomMessage", (data) => {
