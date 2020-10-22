@@ -25,5 +25,15 @@ module.exports = {
                 !error ? resolve(response) : reject(new Error(error));
             });
         });
+    },
+    checkRoom: (user_id, friend_id) => {
+        return new Promise((resolve, reject) => {
+            connection.query(
+                `SELECT * FROM chatroom WHERE sender = ${user_id} AND receiver = ${friend_id}`,
+                (error, response) => {
+                    !error ? resolve(response) : reject(new Error(error));
+                }
+            );
+        });
     }
 };

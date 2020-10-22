@@ -18,24 +18,27 @@ io.on("connection", (socket) => {
   console.log("Socket.io Connect !")
 
   socket.on("joinRoom", (data) => {
-    socket.join(data);
-    socket.to(data).emit("chatMessage");
+    socket.join(data.code_chatroom);
   });
 
   socket.on("roomMessage", (data) => {
-    console.log(data)
+    // console.log(data)
     socket.join(data.code_chatroom);
     io.to(data.code_chatroom).emit("chatMessage", data);
   });
 
+  socket.on("notif", (data) => {
+    // console.log(data)
+    socket.broadcast.emit("notifMessage",data)
+  })
+
   socket.on("createRoom", (data) => {
-    console.log(data)
-    // socket.join(data.code_chatroom);
+    // console.log(data)
     socket.broadcast.emit("room", data)
   })
 
   socket.on("typing", (data) => {
-    console.log(data)
+    // console.log(data)
     socket.join(data.code_chatroom);
     socket.broadcast.emit("typingMessage", data)
   })

@@ -1,5 +1,5 @@
 const helper = require("../helper");
-const { getRoomByUserId, postRoom } = require("../model/room");
+const { getRoomByUserId, postRoom, checkRoom } = require("../model/room");
 const { getLatestMessage } = require("../model/message");
 const { getUserId } = require("../model/users");
 
@@ -37,24 +37,28 @@ module.exports = {
         try {
             const chatroom = Math.round(Math.random() * 100000);
             const { user_id, friend_id } = request.body
-            const setData1 = {
+            const check = await checkRoom(user_id, friend_id);
+            if (check.length <= 0) {
+                const setData1 = {
                 code_chatroom: chatroom,
                 sender: user_id,
                 receiver: friend_id,
                 chatroom_created_at: new Date(),
-            };
-            await postRoom(setData1);
+                };
+                await postRoom(setData1);
 
-            const setData2 = {
-                code_chatroom: chatroom,
-                sender: friend_id,
-                receiver: user_id,
-                chatroom_created_at: new Date(),
-            };
-              // console.log(setData);
-            await postRoom(setData2);
-            return helper.response(response, 200, "Room Created", chatroom);
-
+                const setData2 = {
+                    code_chatroom: chatroom,
+                    sender: friend_id,
+                    receiver: user_id,
+                    chatroom_created_at: new Date(),
+                };
+                  // console.log(setData);
+                await postRoom(setData2);
+                return helper.response(response, 200, "Room Created", chatroom);
+            } else {
+                return helper.response(response, 400, "Room Is Already", chatroom);
+            }
         } catch (error) {
             return helper.response(response, 400, "Bad Request");
         }
