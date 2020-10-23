@@ -20,7 +20,7 @@ Layang web chat is a Restful API for real-time chat via web. It has a clear and 
 2. Type `npm install`
 3. Make new file a called **.env**, set up first [here](#set-up-env-file)
 4. Turn on Web Server and MySQL can using Third-party tool like xampp, etc.
-5. Create a database with the name walle, and Import file sql to **phpmyadmin**
+5. Create a database with the name chatapp, and Import file sql to **phpmyadmin**
 6. Open Postman desktop application or Chrome web app extension that has installed before
 7. Choose HTTP Method and enter request url.(ex. localhost:3001/)
 8. You can see all the end point [here](https://documenter.getpostman.com/view/8990216/TVYAi2HW)

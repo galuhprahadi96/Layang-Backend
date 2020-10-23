@@ -66,7 +66,6 @@ module.exports = {
                         user_name,
                         user_email,
                         user_phone,
-                        // user_updated_at: new Date(),
                     };
                     const result = await patchUser(setData, id);
 
